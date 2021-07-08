@@ -1,13 +1,10 @@
 package com.ygsoft.apps;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.ygsoft.apps.hc.HcMenuTitles;
 import com.ygsoft.apps.hc.HcUserMessages;
 import com.ygsoft.apps.ui.MaintenanceUi;
@@ -18,18 +15,17 @@ import com.ygsoft.apps.ui.MenuBarGenerator;
 
 
 public class CarMaintMain {
+
     // General
     private JFrame fMain;
     private final UiWrapper uiWrapper   = new UiWrapper();
 
     // Menu items
-    private final JMenuItem miMaintAdd  = new JMenuItem(HcMenuTitles.MI_MAINT_NEW.getText());
-    private final JMenuItem miMaintExit = new JMenuItem(HcMenuTitles.MI_MAINT_EXIT.getText());
-
+    private final JMenuItem miMaintAdd    = new JMenuItem(HcMenuTitles.MI_MAINT_NEW.getText());
+    private final JMenuItem miMaintExit   = new JMenuItem(HcMenuTitles.MI_MAINT_EXIT.getText());
     private final JMenuItem miGaragesAdd  = new JMenuItem(HcMenuTitles.MI_GARAGES_ADD.getText());
     private final JMenuItem miGaragesDel  = new JMenuItem(HcMenuTitles.MI_GARAGES_DEL.getText());
     private final JMenuItem miGaragesEdit = new JMenuItem(HcMenuTitles.MI_GARAGES_EDIT.getText());
-
     private final List<JMenuItem> menuItemsList = new ArrayList<>();
 
 
@@ -111,14 +107,28 @@ public class CarMaintMain {
     private void setActionListeners() {
 
         miMaintExit.addActionListener(e->{
+            System.out.println(e.getActionCommand());
             if(Messages.areYouSure(HcUserMessages.M_R_U_SURE.getText())) {
                 fMain.dispose();
             }
         });
 
         miMaintAdd.addActionListener(e->{
+            System.out.println(e.getActionCommand());
             MaintenanceUi mui = new MaintenanceUi();
             mui.setNew();
+        });
+
+        miGaragesAdd.addActionListener(e->{
+            System.out.println(e.getActionCommand());
+        });
+
+        miGaragesDel.addActionListener(e->{
+            System.out.println(e.getActionCommand());
+        });
+
+        miGaragesEdit.addActionListener(e->{
+            System.out.println(e.getActionCommand());
         });
     }
 }
