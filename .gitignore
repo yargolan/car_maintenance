@@ -13,3 +13,8 @@ buildNumber.properties
 # App scpecific
 Data
 Config
+
+# IntelliJ
+**/.idea/**
+*.iml
+
