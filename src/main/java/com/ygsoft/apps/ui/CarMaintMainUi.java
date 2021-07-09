@@ -13,7 +13,6 @@ public class CarMaintMainUi {
     // General
     private JFrame fMain;
     private final UiWrapper uiWrapper   = new UiWrapper();
-//    private final DataSingleton dataSingleton = DataSingleton.getInstance();
 
 
     // Menu items
