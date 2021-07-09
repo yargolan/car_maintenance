@@ -3,6 +3,9 @@ package com.ygsoft.apps.ui;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ygsoft.apps.DataSingleton;
+import com.ygsoft.apps.Garage;
 import com.ygsoft.apps.hc.*;
 import com.ygsoft.apps.Messages;
 
@@ -13,6 +16,8 @@ public class CarMaintMainUi {
     // General
     private JFrame fMain;
     private final UiWrapper uiWrapper   = new UiWrapper();
+    private final DataSingleton dataSingleton = DataSingleton.getInstance();
+
 
     // Menu items
     private final JMenuItem miMaintAdd    = new JMenuItem(HcMenuTitles.MI_MAINT_NEW.getText());
@@ -72,7 +77,7 @@ public class CarMaintMainUi {
 
         miMaintExit.addActionListener(e->{
             System.out.println(e.getActionCommand());
-            if(Messages.areYouSure(HcUserMessages.M_R_U_SURE.getText())) {
+            if (Messages.areYouSure(HcUserMessages.M_R_U_SURE.getText())) {
                 fMain.dispose();
             }
         });
@@ -83,7 +88,11 @@ public class CarMaintMainUi {
             mui.setNew();
         });
 
-        miGaragesAdd.addActionListener(e->System.out.println(e.getActionCommand()));
+        miGaragesAdd.addActionListener(e->{
+            System.out.println(e.getActionCommand());
+            GarageUi garageUi = new GarageUi();
+            garageUi.addNew();
+        });
 
         miGaragesDel.addActionListener(e->System.out.println(e.getActionCommand()));
 

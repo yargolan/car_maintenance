@@ -1,6 +1,7 @@
 package com.ygsoft.apps.ui;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import com.ygsoft.apps.*;
@@ -10,17 +11,33 @@ import com.ygsoft.apps.hc.*;
 
 public class MaintenanceUi {
 
+    private final DataSingleton dataSingleton = DataSingleton.getInstance();
     private final UiWrapper uiWrapper = new UiWrapper();
+    private List<String> garageNames = new ArrayList<>();
 
     public MaintenanceUi(){}
 
 
 
+    private void getGarageNames() {
+        SqlWrapper sqlWrapper = new SqlWrapper(dataSingleton.getDbGarages());
+        try {
+            garageNames = sqlWrapper.getGarageNames();
+        }
+        catch (CarMaintenanceInternalException e) {
+            Messages.showMessage(Messages.MESSAGE_ERR, e.getMessage());
+        }
+    }
+
+
+
+
+
+
     public void setNew() {
 
-        // Get the garages list.
-        GarageWrapper gw = new GarageWrapper();
-        List<Garage> garagesList = gw.getGaragesList();
+        // Get the garage names.
+        getGarageNames();
 
 
         // Get the maintenance types
@@ -141,15 +158,15 @@ public class MaintenanceUi {
             try {
                 mw.add(m);
             }
-            catch (CarMaintenanceInternalException cmie) {
-                Messages.showMessage(Messages.MESSAGE_ERR, cmie.getMessage());
+            catch (CarMaintenanceInternalException ie) {
+                Messages.showMessage(Messages.MESSAGE_ERR, ie.getMessage());
             }
         });
 
         // Insert initial lists to the drop-down menus
-//        for (Garage g : garagesList) {
-//            ddGarageName.addItem(g.getName());
-//        }
+        for (String s : garageNames) {
+            ddGarageName.addItem(s);
+        }
 
         for (String s : maintTypes) {
             ddMaintType.addItem(s);
