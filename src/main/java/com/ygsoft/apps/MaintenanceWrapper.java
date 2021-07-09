@@ -24,7 +24,7 @@ public class MaintenanceWrapper {
         String sql = String.format(
                 "INSERT INTO %s (%s, %s, %s, %s) "
                 + "VALUES ('%s', '%s', '%s', '%s');",
-                HcSql.TABLE_NAME_GARAGES,
+                HcSql.TABLE_NAME_MAINT.getText(),
                 HcSql.COLUMN_MAINT_DATE.getText(),
                 HcSql.COLUMN_MAINT_TYPE.getText(),
                 HcSql.COLUMN_MAINT_GARAGE_INDEX.getText(),

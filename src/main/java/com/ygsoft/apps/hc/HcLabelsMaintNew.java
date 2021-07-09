@@ -10,6 +10,8 @@ public enum HcLabelsMaintNew {
     L_DATE_YEAR ("שנה"),
     L_DATE_MONTH("חודש"),
 
+    L_ADD_LINE  ("הוסף שורה נוספת"),
+
     B_TODAY("היום"),
     ;
 

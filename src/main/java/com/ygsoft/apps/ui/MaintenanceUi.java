@@ -2,6 +2,8 @@ package com.ygsoft.apps.ui;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import javax.swing.*;
 import com.ygsoft.apps.*;
@@ -53,6 +55,7 @@ public class MaintenanceUi {
 
         JLabel lDate               = new JLabel(HcLabelsMaintNew.L_DATE.getText());
         JLabel lGarageName         = new JLabel(HcLabelsGarage.L_GARAGE_NAME.getText());
+        JLabel lAddAnotherLine     = new JLabel(HcLabelsMaintNew.L_ADD_LINE.getText());
         JLabel lMaintenanceType    = new JLabel(HcLabelsMaintNew.L_TYPE.getText());
         JLabel lMaintenanceDetails = new JLabel(HcLabelsMaintNew.L_DETAILS.getText());
 
@@ -60,6 +63,8 @@ public class MaintenanceUi {
         JTextField tfDateYear      = new JTextField(HcLabelsMaintNew.L_DATE_YEAR.getText());
         JTextField tfDateMonth     = new JTextField(HcLabelsMaintNew.L_DATE_MONTH.getText());
         JTextField tfMaintDetails  = new JTextField();
+
+        JCheckBox cbAddAnother = new JCheckBox();
 
         JButton bToday   = new JButton(HcLabelsMaintNew.B_TODAY.getText());
         JButton bApprove = new JButton(HcGeneral.B_APPROVE.getText());
@@ -72,6 +77,7 @@ public class MaintenanceUi {
         lGarageName.setBounds        (320, 60, 150, 20);
         lMaintenanceType.setBounds   (275, 100,150, 20);
         lMaintenanceDetails.setBounds(265, 140,150, 20);
+        lAddAnotherLine.setBounds    (280, 180,120,  20);
 
         tfDateDay.setBounds     (85, 20,50, 20);
         tfDateYear.setBounds    (195,20,50, 20);
@@ -79,10 +85,12 @@ public class MaintenanceUi {
         tfMaintDetails.setBounds(10,140,245,20);
 
         bToday.setBounds  (10, 20, 60, 20);
-        bApprove.setBounds(150,210,100,40);
+        bApprove.setBounds(150,220,100,40);
 
         ddGarageName.setBounds(85, 60,170, 25);
         ddMaintType.setBounds (85,100,170, 25);
+
+        cbAddAnother.setBounds(230, 175, 30, 30);
 
         tfDateDay.setHorizontalAlignment(SwingConstants.RIGHT);
         tfDateYear.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -95,6 +103,7 @@ public class MaintenanceUi {
         Container container = fMaintNew.getContentPane();
         container.add(lDate);
         container.add(lGarageName);
+        container.add(lAddAnotherLine);
         container.add(lMaintenanceType);
         container.add(lMaintenanceDetails);
         container.add(tfDateDay);
@@ -105,6 +114,7 @@ public class MaintenanceUi {
         container.add(bApprove);
         container.add(ddMaintType);
         container.add(ddGarageName);
+        container.add(cbAddAnother);
 
 
         // Action listeners
@@ -152,7 +162,13 @@ public class MaintenanceUi {
                 return;
             }
 
-            String date = readDateDay + "/" + readDateMonth + "/" + readDateYear;
+            DateAndTime dateAndTime = new DateAndTime();
+            String date = String.join("/",
+                    readDateDay,
+                    dateAndTime.convertMonthToText(Integer.parseInt(readDateMonth)),
+                    readDateYear
+            );
+
             Maintenance m = new Maintenance(date, readGarageName, readMaintType, readMaintDetails);
             MaintenanceWrapper mw = new MaintenanceWrapper();
             try {
@@ -160,14 +176,27 @@ public class MaintenanceUi {
             }
             catch (CarMaintenanceInternalException ie) {
                 Messages.showMessage(Messages.MESSAGE_ERR, ie.getMessage());
+                return;
+            }
+
+            Messages.showMessage(Messages.MESSAGE_INF, HcUserMessages.M_MAINT_ADD_OK.getText());
+
+            // Close the form only if the 'add another' is NOT selected
+            if (cbAddAnother.isSelected()) {
+                tfMaintDetails.setText("");
+            }
+            else {
+                fMaintNew.dispose();
             }
         });
 
         // Insert initial lists to the drop-down menus
+        Collections.sort(garageNames);
         for (String s : garageNames) {
             ddGarageName.addItem(s);
         }
 
+        Collections.sort(maintTypes);
         for (String s : maintTypes) {
             ddMaintType.addItem(s);
             ddMaintType.setAlignmentX(Component.RIGHT_ALIGNMENT);
