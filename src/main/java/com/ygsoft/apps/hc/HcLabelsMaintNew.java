@@ -12,6 +12,7 @@ public enum HcLabelsMaintNew {
     L_DATE_MONTH("חודש"),
 
     B_TODAY("היום"),
+    B_APPROVE("אישור"),
     ;
 
     private final String theText;

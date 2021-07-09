@@ -1,16 +1,11 @@
 package com.ygsoft.apps.ui;
 
-import javax.swing.*;
-
-import com.ygsoft.apps.AppHelper;
-import com.ygsoft.apps.DateAndTime;
-import com.ygsoft.apps.Garage;
-import com.ygsoft.apps.GarageWrapper;
-import com.ygsoft.apps.hc.HcFramesTitles;
-import com.ygsoft.apps.hc.HcLabelsMaintNew;
-
 import java.awt.*;
 import java.util.List;
+import javax.swing.*;
+import com.ygsoft.apps.*;
+import com.ygsoft.apps.hc.*;
+
 
 
 public class MaintenanceUi {
@@ -44,12 +39,13 @@ public class MaintenanceUi {
         JLabel lMaintenanceType    = new JLabel(HcLabelsMaintNew.L_TYPE.getText());
         JLabel lMaintenanceDetails = new JLabel(HcLabelsMaintNew.L_DETAILS.getText());
 
-        JTextField tfDateDay      = new JTextField(HcLabelsMaintNew.L_DATE_DAY.getText());
-        JTextField tfDateYear     = new JTextField(HcLabelsMaintNew.L_DATE_YEAR.getText());
-        JTextField tfDateMonth    = new JTextField(HcLabelsMaintNew.L_DATE_MONTH.getText());
-        JTextField tfMaintDetails = new JTextField();
+        JTextField tfDateDay       = new JTextField(HcLabelsMaintNew.L_DATE_DAY.getText());
+        JTextField tfDateYear      = new JTextField(HcLabelsMaintNew.L_DATE_YEAR.getText());
+        JTextField tfDateMonth     = new JTextField(HcLabelsMaintNew.L_DATE_MONTH.getText());
+        JTextField tfMaintDetails  = new JTextField();
 
-        JButton bToday = new JButton(HcLabelsMaintNew.B_TODAY.getText());
+        JButton bToday   = new JButton(HcLabelsMaintNew.B_TODAY.getText());
+        JButton bApprove = new JButton(HcLabelsMaintNew.B_APPROVE.getText());
 
         JComboBox<String> ddMaintType  = new JComboBox<>();
         JComboBox<String> ddGarageName = new JComboBox<>();
@@ -65,7 +61,8 @@ public class MaintenanceUi {
         tfDateMonth.setBounds   (140,20,50, 20);
         tfMaintDetails.setBounds(10,140,245,20);
 
-        bToday.setBounds(10, 20,60, 20);
+        bToday.setBounds  (10, 20, 60, 20);
+        bApprove.setBounds(150,210,100,40);
 
         ddGarageName.setBounds(85, 60,170, 25);
         ddMaintType.setBounds (85,100,170, 25);
@@ -88,6 +85,7 @@ public class MaintenanceUi {
         container.add(tfDateMonth);
         container.add(tfMaintDetails);
         container.add(bToday);
+        container.add(bApprove);
         container.add(ddMaintType);
         container.add(ddGarageName);
 
@@ -102,6 +100,45 @@ public class MaintenanceUi {
             tfDateMonth.setText(date_month);
         });
 
+        bApprove.addActionListener(e->{
+
+            String readDateDay      = tfDateDay.getText();
+            String readDateYear     = tfDateYear.getText();
+            String readDateMonth    = tfDateMonth.getText();
+            String readMaintType    = (String)ddMaintType.getSelectedItem();
+            String readGarageName   = (String)ddGarageName.getSelectedItem();
+            String readMaintDetails = tfMaintDetails.getText();
+
+            // Read the form
+            if (readDateDay == null || readDateDay.isEmpty() || readDateDay.equals(HcLabelsMaintNew.L_DATE_DAY.getText())) {
+                Messages.showMessage(Messages.MESSAGE_ERR, HcErrors.E_DATE.getText());
+                return;
+            }
+
+            if (readDateYear == null || readDateYear.isEmpty() || readDateYear.equals(HcLabelsMaintNew.L_DATE_YEAR.getText())) {
+                Messages.showMessage(Messages.MESSAGE_ERR, HcErrors.E_DATE.getText());
+                return;
+            }
+
+            if (readDateMonth == null || readDateMonth.isEmpty() || readDateMonth.equals(HcLabelsMaintNew.L_DATE_MONTH.getText())) {
+                Messages.showMessage(Messages.MESSAGE_ERR, HcErrors.E_DATE.getText());
+                return;
+            }
+
+            if (readMaintDetails == null || readMaintDetails.isEmpty()) {
+                Messages.showMessage(Messages.MESSAGE_ERR, HcErrors.E_MAINT.getText());
+                return;
+            }
+
+            if (readGarageName == null || readGarageName.isEmpty()) {
+                Messages.showMessage(Messages.MESSAGE_ERR, HcErrors.E_GARAGE.getText());
+                return;
+            }
+
+            String date = readDateDay + "/" + readDateMonth + "/" + readDateYear;
+            Maintenance m = new Maintenance(date, readGarageName, readMaintType, readMaintDetails);
+            Main
+        });
 
         // Insert initial lists to the drop-down menus
 //        for (Garage g : garagesList) {

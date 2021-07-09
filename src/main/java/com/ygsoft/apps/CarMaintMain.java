@@ -1,32 +1,18 @@
 package com.ygsoft.apps;
 
-import javax.swing.*;
+import java.sql.*;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import com.ygsoft.apps.hc.HcMenuTitles;
-import com.ygsoft.apps.hc.HcUserMessages;
-import com.ygsoft.apps.ui.MaintenanceUi;
-import com.ygsoft.apps.ui.UiWrapper;
-import com.ygsoft.apps.hc.HcFramesTitles;
-import com.ygsoft.apps.ui.MenuBarGenerator;
+
+import com.ygsoft.apps.hc.HcSql;
+import com.ygsoft.apps.ui.CarMaintMainUi;
 
 
 
 public class CarMaintMain {
 
-    // General
-    private JFrame fMain;
-    private final UiWrapper uiWrapper   = new UiWrapper();
-
-    // Menu items
-    private final JMenuItem miMaintAdd    = new JMenuItem(HcMenuTitles.MI_MAINT_NEW.getText());
-    private final JMenuItem miMaintExit   = new JMenuItem(HcMenuTitles.MI_MAINT_EXIT.getText());
-    private final JMenuItem miGaragesAdd  = new JMenuItem(HcMenuTitles.MI_GARAGES_ADD.getText());
-    private final JMenuItem miGaragesDel  = new JMenuItem(HcMenuTitles.MI_GARAGES_DEL.getText());
-    private final JMenuItem miGaragesEdit = new JMenuItem(HcMenuTitles.MI_GARAGES_EDIT.getText());
-    private final List<JMenuItem> menuItemsList = new ArrayList<>();
+    private final DataSingleton dataSingleton = DataSingleton.getInstance();
+    private final File dbMaint   = dataSingleton.getDbMaint();
+    private final File dbGarages = dataSingleton.getDbGarages();
 
 
     private CarMaintMain(){}
@@ -37,8 +23,9 @@ public class CarMaintMain {
         try {
             CarMaintMain carMaintMain = new CarMaintMain();
             carMaintMain.initApp();
-            carMaintMain.setMenuItems();
-            carMaintMain.setAndShowUi();
+
+            CarMaintMainUi carMaintMainUi = new CarMaintMainUi();
+            carMaintMainUi.setAndShowUi();
         }
         catch (Throwable t) {
             Messages.exitWithError(t.getMessage(), true);
@@ -48,92 +35,97 @@ public class CarMaintMain {
 
 
     private void initApp() throws CarMaintenanceInternalException {
-        File data;
-        try {
-            data = new File("./Data").getCanonicalFile();
-        }
-        catch (IOException e) {
-            throw new CarMaintenanceInternalException(e.getMessage(), e);
-        }
 
-        if (!data.exists()) {
-            if(!data.mkdirs()) {
+        File dataFolder = dataSingleton.getDataDir();
+
+
+        // Data folder
+        if (!dataFolder.exists()) {
+            if (!dataFolder.mkdirs()) {
                 Messages.exitWithError("Cannot create the 'data' folder. Abort", true);
             }
         }
-    }
 
 
+        // Databases - Garages.
+        if (dbGarages.exists()) {
+            System.out.println("DB garages exists.");
+        }
+        else {
 
-    private void setMenuItems() {
-        menuItemsList.add(miMaintAdd);
-        menuItemsList.add(miMaintExit);
-        menuItemsList.add(miGaragesAdd);
-        menuItemsList.add(miGaragesDel);
-        menuItemsList.add(miGaragesEdit);
-    }
+            String sql = String.format("CREATE TABLE %s"
+                            + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+                            + "%s TEXT NOT NULL, "
+                            + "%s TEXT NOT NULL, "
+                            + "%s TEXT NOT NULL, "
+                            + "%s TEXT NOT NULL)",
+                    HcSql.TABLE_NAME_GARAGES.getText(),
+                    HcSql.COLUMN_GARAGE_NAME.getText(),
+                    HcSql.COLUMN_GARAGE_PHONE.getText(),
+                    HcSql.COLUMN_GARAGE_CONTACT.getText(),
+                    HcSql.COLUMN_GARAGE_LOCATION.getText()
+            );
 
+            try {
 
+                Class.forName("org.sqlite.JDBC");
 
-    private void setAndShowUi() {
+                Connection c = DriverManager.getConnection("jdbc:sqlite:" + dbGarages);
 
-        fMain = uiWrapper.generateFrame(
-                UiWrapper.FRAME_SIZE_XL,
-                WindowConstants.EXIT_ON_CLOSE,
-                HcFramesTitles.T_FRAME_MAIN.getText()
-        );
+                Statement stmt = c.createStatement();
 
-        MenuBarGenerator menuBarGenerator = new MenuBarGenerator();
+                stmt.executeUpdate(sql);
 
+                stmt.close();
 
-        // Set the menu bar of the application
-        JMenuBar mb = menuBarGenerator.generate(menuItemsList);
-
-
-        // Set the menu bar in to the main frame.
-        fMain.setJMenuBar(mb);
-
-
-        // Set the action listeners for the menu items.
-        setActionListeners();
-
-
-        fMain.setVisible(true);
-
-    }
-
-
-
-    private void setActionListeners() {
-
-        miMaintExit.addActionListener(e->{
-            System.out.println(e.getActionCommand());
-            if(Messages.areYouSure(HcUserMessages.M_R_U_SURE.getText())) {
-                fMain.dispose();
+                c.close();
             }
-        });
+            catch ( Exception e ) {
+                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+                throw new CarMaintenanceInternalException(e.getMessage());
+            }
+        }
 
-        miMaintAdd.addActionListener(e->{
-            System.out.println(e.getActionCommand());
-            MaintenanceUi mui = new MaintenanceUi();
-            mui.setNew();
-        });
 
-        miGaragesAdd.addActionListener(e->{
-            System.out.println(e.getActionCommand());
-        });
+        // Databases - Maintenance.
+        if (dbMaint.exists()) {
+            System.out.println("DB maintenance exists.");
+        }
+        else {
 
-        miGaragesDel.addActionListener(e->{
-            System.out.println(e.getActionCommand());
-        });
+            String sql = String.format("CREATE TABLE %s"
+                            + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+                            + "%s TEXT NOT NULL, "
+                            + "%s TEXT NOT NULL, "
+                            + "%s TEXT NOT NULL, "
+                            + "%s TEXT NOT NULL)",
+                    HcSql.TABLE_NAME_MAINT.getText(),
+                    HcSql.COLUMN_MAINT_DATE.getText(),
+                    HcSql.COLUMN_MAINT_TYPE.getText(),
+                    HcSql.COLUMN_MAINT_GARAGE_INDEX.getText(),
+                    HcSql.COLUMN_MAINT_DETAILS.getText()
+            );
 
-        miGaragesEdit.addActionListener(e->{
-            System.out.println(e.getActionCommand());
-        });
+            try {
+                Class.forName("org.sqlite.JDBC");
+
+                Connection c = DriverManager.getConnection("jdbc:sqlite:" + dbMaint);
+
+                Statement stmt = c.createStatement();
+
+                stmt.executeUpdate(sql);
+
+                stmt.close();
+
+                c.close();
+            }
+            catch ( Exception e ) {
+                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+                throw new CarMaintenanceInternalException(e.getMessage());
+            }
+        }
     }
 }
-
-
 
 
 
