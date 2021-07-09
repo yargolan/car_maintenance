@@ -52,7 +52,7 @@ public class MaintenanceUi {
         );
 
         JLabel lDate               = new JLabel(HcLabelsMaintNew.L_DATE.getText());
-        JLabel lGarageName         = new JLabel(HcLabelsMaintNew.L_GARAGE_NAME.getText());
+        JLabel lGarageName         = new JLabel(HcLabelsGarage.L_GARAGE_NAME.getText());
         JLabel lMaintenanceType    = new JLabel(HcLabelsMaintNew.L_TYPE.getText());
         JLabel lMaintenanceDetails = new JLabel(HcLabelsMaintNew.L_DETAILS.getText());
 
@@ -62,7 +62,7 @@ public class MaintenanceUi {
         JTextField tfMaintDetails  = new JTextField();
 
         JButton bToday   = new JButton(HcLabelsMaintNew.B_TODAY.getText());
-        JButton bApprove = new JButton(HcLabelsMaintNew.B_APPROVE.getText());
+        JButton bApprove = new JButton(HcGeneral.B_APPROVE.getText());
 
         JComboBox<String> ddMaintType  = new JComboBox<>();
         JComboBox<String> ddGarageName = new JComboBox<>();

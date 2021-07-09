@@ -2,7 +2,8 @@ package com.ygsoft.apps.hc;
 
 public enum HcUserMessages {
 
-    M_R_U_SURE("האם את/ה בטוח/ה ?"),
+    M_R_U_SURE     ("האם את/ה בטוח/ה ?"),
+    M_GARAGE_ADD_OK("המוסך נוסף לרשימה בהצלחה"),
     ;
 
     private final String theText;
