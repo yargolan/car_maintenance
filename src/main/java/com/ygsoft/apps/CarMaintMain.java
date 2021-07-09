@@ -1,6 +1,5 @@
 package com.ygsoft.apps;
 
-import java.sql.*;
 import java.io.File;
 
 import com.ygsoft.apps.hc.HcSql;
@@ -66,24 +65,8 @@ public class CarMaintMain {
                     HcSql.COLUMN_GARAGE_LOCATION.getText()
             );
 
-            try {
-
-                Class.forName("org.sqlite.JDBC");
-
-                Connection c = DriverManager.getConnection("jdbc:sqlite:" + dbGarages);
-
-                Statement stmt = c.createStatement();
-
-                stmt.executeUpdate(sql);
-
-                stmt.close();
-
-                c.close();
-            }
-            catch ( Exception e ) {
-                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-                throw new CarMaintenanceInternalException(e.getMessage());
-            }
+            SqlWrapper sqlWrapper = new SqlWrapper(dbGarages);
+            sqlWrapper.runCommand(sql);
         }
 
 
@@ -106,23 +89,8 @@ public class CarMaintMain {
                     HcSql.COLUMN_MAINT_DETAILS.getText()
             );
 
-            try {
-                Class.forName("org.sqlite.JDBC");
-
-                Connection c = DriverManager.getConnection("jdbc:sqlite:" + dbMaint);
-
-                Statement stmt = c.createStatement();
-
-                stmt.executeUpdate(sql);
-
-                stmt.close();
-
-                c.close();
-            }
-            catch ( Exception e ) {
-                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-                throw new CarMaintenanceInternalException(e.getMessage());
-            }
+            SqlWrapper sqlWrapper = new SqlWrapper(dbMaint);
+            sqlWrapper.runCommand(sql);
         }
     }
 }

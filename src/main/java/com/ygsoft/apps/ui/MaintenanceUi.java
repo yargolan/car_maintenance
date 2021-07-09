@@ -137,7 +137,13 @@ public class MaintenanceUi {
 
             String date = readDateDay + "/" + readDateMonth + "/" + readDateYear;
             Maintenance m = new Maintenance(date, readGarageName, readMaintType, readMaintDetails);
-            Main
+            MaintenanceWrapper mw = new MaintenanceWrapper();
+            try {
+                mw.add(m);
+            }
+            catch (CarMaintenanceInternalException cmie) {
+                Messages.showMessage(Messages.MESSAGE_ERR, cmie.getMessage());
+            }
         });
 
         // Insert initial lists to the drop-down menus

@@ -1,65 +1,62 @@
 package com.ygsoft.apps;
 
-import com.google.gson.*;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import com.ygsoft.apps.hc.HcSql;
+
+
 
 public class MaintenanceWrapper {
 
-    private final Maintenance maintesnance;
-    private final File dbMaint;
     private final DataSingleton dataSingleton = DataSingleton.getInstance();
 
 
-    MaintenanceWrapper(Maintenance m){
-        this.maintenance = m;
-        this.dbMaint = dataSingleton.getRootDir();
-    }
+    public MaintenanceWrapper() {}
 
 
-    void add() throws CarMaintenanceInternalException {
 
-        JsonArray currentMaintenances = getCurrentMaintenances();
+    public void add(Maintenance maintenance) throws CarMaintenanceInternalException {
 
-        Gson gson = new GsonBuilder().create();
+        String connectionString = "jdbc:sqlite:" + dataSingleton.getDbMaint().getAbsolutePath();
 
-        JsonElement jeCurrentMaintenance = gson.toJsonTree(this.maintenance, Maintenance.class);
+        String sql = String.format(
+                "INSERT INTO %s (%s, %s, %s, %s) "
+                + "VALUES ('%s', '%s', '%s', '%s');",
+                HcSql.TABLE_NAME_GARAGES,
+                HcSql.COLUMN_MAINT_DATE.getText(),
+                HcSql.COLUMN_MAINT_TYPE.getText(),
+                HcSql.COLUMN_MAINT_GARAGE_INDEX.getText(),
+                HcSql.COLUMN_MAINT_DETAILS.getText(),
+                maintenance.getDate(),
+                maintenance.getMaintType(),
+                maintenance.getGarageName(),
+                maintenance.getMaintDetails()
+        );
 
-        currentMaintenances.add(jeCurrentMaintenance);
-
-        // create a writer
         try {
-            BufferedWriter writer = Files.newBufferedWriter(Paths.get(dbMaint.getAbsolutePath()));
 
-            // write JSON to file
-            writer.write(gson.toJson(currentMaintenances));
+            Class.forName("org.sqlite.JDBC");
 
-            //close the writer
-            writer.close();
+            Connection connection = DriverManager.getConnection(connectionString);
+
+            connection.setAutoCommit(false);
+
+            Statement statement = connection.createStatement();
+
+            statement.executeUpdate(sql);
+
+            statement.close();
+
+            connection.commit();
+
+            connection.close();
         }
-        catch (IOException e) {
-            e.printStackTrace();
+        catch ( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            throw new CarMaintenanceInternalException(e.getMessage());
         }
-    }
-
-
-    private JsonArray getCurrentMaintenances() {
-
-        // create a reader
-        Reader reader;
-        try {
-            reader = Files.newBufferedReader(Paths.get(dbMaint.getAbsolutePath()));
-        }
-        catch (IOException e) {
-            return new JsonArray();
-        }
-
-        //create JsonObject instance
-        return JsonParser.parseReader(reader).getAsJsonArray();
     }
 }
+

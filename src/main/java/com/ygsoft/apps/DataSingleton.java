@@ -26,6 +26,8 @@ public class DataSingleton {
 
             data.put("db_maint" ,  "Maintenances.db");
             data.put("db_garages", "Garages.db");
+
+            data.put("sql_separator", "::::");
         }
         catch (IOException e) {
             Messages.showMessage(Messages.MESSAGE_ERR, "Cannot determine the profiles dir.");
@@ -40,6 +42,11 @@ public class DataSingleton {
         }
     }
 
+
+
+    public String getSqlSeparator() {
+        return data.getOrDefault("sql_separator", "Unknown");
+    }
 
 
     public String getAppVersion() {
