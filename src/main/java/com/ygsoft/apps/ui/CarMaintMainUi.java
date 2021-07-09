@@ -1,11 +1,8 @@
 package com.ygsoft.apps.ui;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
-
-import com.ygsoft.apps.DataSingleton;
-import com.ygsoft.apps.Garage;
+import java.util.ArrayList;
 import com.ygsoft.apps.hc.*;
 import com.ygsoft.apps.Messages;
 
@@ -16,15 +13,18 @@ public class CarMaintMainUi {
     // General
     private JFrame fMain;
     private final UiWrapper uiWrapper   = new UiWrapper();
-    private final DataSingleton dataSingleton = DataSingleton.getInstance();
+//    private final DataSingleton dataSingleton = DataSingleton.getInstance();
 
 
     // Menu items
-    private final JMenuItem miMaintAdd    = new JMenuItem(HcMenuTitles.MI_MAINT_NEW.getText());
-    private final JMenuItem miMaintExit   = new JMenuItem(HcMenuTitles.MI_MAINT_EXIT.getText());
-    private final JMenuItem miGaragesAdd  = new JMenuItem(HcMenuTitles.MI_GARAGES_ADD.getText());
-    private final JMenuItem miGaragesDel  = new JMenuItem(HcMenuTitles.MI_GARAGES_DEL.getText());
-    private final JMenuItem miGaragesEdit = new JMenuItem(HcMenuTitles.MI_GARAGES_EDIT.getText());
+    private final JMenuItem miMaintAdd          = new JMenuItem(HcMenuTitles.MI_MAINT_NEW.getText());
+    private final JMenuItem miMaintExit         = new JMenuItem(HcMenuTitles.MI_MAINT_EXIT.getText());
+    private final JMenuItem miGaragesAdd        = new JMenuItem(HcMenuTitles.MI_GARAGES_ADD.getText());
+    private final JMenuItem miGaragesDel        = new JMenuItem(HcMenuTitles.MI_GARAGES_DEL.getText());
+    private final JMenuItem miGaragesEdit       = new JMenuItem(HcMenuTitles.MI_GARAGES_EDIT.getText());
+    private final JMenuItem miReportPerType     = new JMenuItem(HcMenuTitles.MI_REPORTS_PER_TYPE.getText());
+    private final JMenuItem miReportPerDates    = new JMenuItem(HcMenuTitles.MI_REPORTS_PER_DATES.getText());
+    private final JMenuItem miReportPerGarage   = new JMenuItem(HcMenuTitles.MI_REPORTS_PER_GARAGE.getText());
     private final List<JMenuItem> menuItemsList = new ArrayList<>();
 
 
@@ -38,6 +38,9 @@ public class CarMaintMainUi {
         menuItemsList.add(miGaragesAdd);
         menuItemsList.add(miGaragesDel);
         menuItemsList.add(miGaragesEdit);
+        menuItemsList.add(miReportPerType);
+        menuItemsList.add(miReportPerDates);
+        menuItemsList.add(miReportPerGarage);
     }
 
 

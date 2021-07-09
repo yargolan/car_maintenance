@@ -3,6 +3,7 @@ package com.ygsoft.apps.ui;
 import com.ygsoft.apps.hc.HcMenuTitles;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
 public class MenuBarGenerator {
@@ -16,6 +17,7 @@ public class MenuBarGenerator {
 
         JMenu mMaintenance = new JMenu(HcMenuTitles.M_MAINTENANCE.getText());
         JMenu mGarages     = new JMenu(HcMenuTitles.M_GARAGES.getText());
+        JMenu mReports     = new JMenu(HcMenuTitles.M_REPORTS.getText());
 
         // Maintenance
         mMaintenance.add(menuItemList.get(0));
@@ -29,11 +31,17 @@ public class MenuBarGenerator {
         mGarages.add(menuItemList.get(4));
 
 
+        // Reports
+        mReports.add(menuItemList.get(7));
+        mReports.add(menuItemList.get(5));
+        mReports.add(menuItemList.get(6));
+
+
         // Add the menus to the menuBar
         mb.add(mMaintenance);
         mb.add(mGarages);
+        mb.add(mReports);
 
         return mb;
-
     }
 }
