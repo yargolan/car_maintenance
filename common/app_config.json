@@ -1,0 +1,10 @@
+{
+    "files":
+    {
+        "user_messages": "user_messages.json"
+    },
+    "directories":
+    {
+        "user_messages": ".UserMessages"
+    }
+}
