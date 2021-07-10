@@ -35,13 +35,22 @@ public class CarMaintMain {
 
     private void initApp() throws CarMaintenanceInternalException {
 
-        File dataFolder = dataSingleton.getDataDir();
+        File dataFolder    = dataSingleton.getDataDir();
+        File reportsFolder = dataSingleton.getReportsDir();
 
 
         // Data folder
         if (!dataFolder.exists()) {
             if (!dataFolder.mkdirs()) {
                 Messages.exitWithError("Cannot create the 'data' folder. Abort", true);
+            }
+        }
+
+
+        // Report folder
+        if (!reportsFolder.exists()) {
+            if (!reportsFolder.mkdirs()) {
+                Messages.exitWithError("Cannot create the 'reports' folder. Abort", true);
             }
         }
 
@@ -65,8 +74,8 @@ public class CarMaintMain {
                     HcSql.COLUMN_GARAGE_LOCATION.getText()
             );
 
-            SqlWrapper sqlWrapper = new SqlWrapper(dbGarages);
-            sqlWrapper.runCommand(sql);
+            SqlWrapper1 sqlWrapper1 = new SqlWrapper1(dbGarages);
+            sqlWrapper1.runCommand(sql);
         }
 
 
@@ -89,8 +98,8 @@ public class CarMaintMain {
                     HcSql.COLUMN_MAINT_DETAILS.getText()
             );
 
-            SqlWrapper sqlWrapper = new SqlWrapper(dbMaint);
-            sqlWrapper.runCommand(sql);
+            SqlWrapper1 sqlWrapper1 = new SqlWrapper1(dbMaint);
+            sqlWrapper1.runCommand(sql);
         }
     }
 }

@@ -15,13 +15,15 @@ public class DataSingleton {
     private DataSingleton() {
 
         try {
-            File rootDir   = new File(".").getCanonicalFile();
-            File DataDir   = new File(String.format("%s/Data", rootDir));
-            File ConfigDir = new File(String.format("%s/Config", rootDir));
+            File rootDir    = new File(".").getCanonicalFile();
+            File DataDir    = new File(String.format("%s/Data", rootDir));
+            File ConfigDir  = new File(String.format("%s/Config", rootDir));
+            File ReportsDir = new File(String.format("%s/Reports", rootDir));
 
-            data.put("root_dir",   rootDir.getAbsolutePath());
-            data.put("data_dir",   DataDir.getAbsolutePath());
-            data.put("config_dir", ConfigDir.getAbsolutePath());
+            data.put("root_dir",    rootDir.getAbsolutePath());
+            data.put("data_dir",    DataDir.getAbsolutePath());
+            data.put("config_dir" , ConfigDir.getAbsolutePath());
+            data.put("reports_dir", ReportsDir.getAbsolutePath());
 
 
             data.put("db_maint" ,  "Maintenances.db");
@@ -62,6 +64,12 @@ public class DataSingleton {
 
     public File getDataDir() {
         return new File(data.getOrDefault("data_dir", "Unknown"));
+    }
+
+
+
+    public File getReportsDir() {
+        return new File(data.getOrDefault("reports_dir", "Unknown"));
     }
 
 

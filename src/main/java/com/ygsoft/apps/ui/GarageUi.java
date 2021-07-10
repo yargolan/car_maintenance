@@ -7,7 +7,7 @@ import com.ygsoft.apps.CarMaintenanceInternalException;
 import com.ygsoft.apps.DataSingleton;
 import com.ygsoft.apps.hc.*;
 import com.ygsoft.apps.Messages;
-import com.ygsoft.apps.SqlWrapper;
+import com.ygsoft.apps.SqlWrapper1;
 
 
 
@@ -118,9 +118,9 @@ public class GarageUi {
             );
 
 
-            SqlWrapper sqlWrapper = new SqlWrapper(dataSingleton.getDbGarages());
+            SqlWrapper1 sqlWrapper1 = new SqlWrapper1(dataSingleton.getDbGarages());
             try {
-                sqlWrapper.runCommand(sqlCommand);
+                sqlWrapper1.runCommand(sqlCommand);
             }
             catch (CarMaintenanceInternalException ie) {
                 ie.printStackTrace();

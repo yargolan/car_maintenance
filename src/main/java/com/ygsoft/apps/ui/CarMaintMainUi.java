@@ -99,6 +99,11 @@ public class CarMaintMainUi {
         miGaragesDel.addActionListener(e->System.out.println(e.getActionCommand()));
 
         miGaragesEdit.addActionListener(e->System.out.println(e.getActionCommand()));
+
+        miReportPerGarage.addActionListener(e->{
+            ReportsUi reportsUi = new ReportsUi();
+            reportsUi.generateReportPerGarage();
+        });
     }
 }
 

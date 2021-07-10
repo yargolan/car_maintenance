@@ -3,21 +3,18 @@ package com.ygsoft.apps;
 import com.ygsoft.apps.hc.HcSql;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class SqlWrapper {
+public class SqlWrapper1 {
 
     private final String connectionString;
 
 
 
-    public SqlWrapper(File dbFile) {
+    public SqlWrapper1(File dbFile) {
         this.connectionString = "jdbc:sqlite:" + dbFile.getAbsolutePath();
     }
 

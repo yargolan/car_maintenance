@@ -3,7 +3,6 @@ package com.ygsoft.apps.ui;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import javax.swing.*;
 import com.ygsoft.apps.*;
@@ -22,9 +21,9 @@ public class MaintenanceUi {
 
 
     private void getGarageNames() {
-        SqlWrapper sqlWrapper = new SqlWrapper(dataSingleton.getDbGarages());
+        SqlWrapper1 sqlWrapper1 = new SqlWrapper1(dataSingleton.getDbGarages());
         try {
-            garageNames = sqlWrapper.getGarageNames();
+            garageNames = sqlWrapper1.getGarageNames();
         }
         catch (CarMaintenanceInternalException e) {
             Messages.showMessage(Messages.MESSAGE_ERR, e.getMessage());
