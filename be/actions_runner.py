@@ -4,77 +4,100 @@ import os
 import sys
 import json
 
+
 app_config = {}
 
 
+
 def parse_arguments(arguments):
-    if len(arguments) > 1:
-        action_name = sys.argv[1]
-        if action_name == "add_garage":
-            garage_add(arguments[2:])
-    else:
+    data = {}
+
+    if len(arguments) < 3:
         show_usage(sys.argv[0].split(os.sep)[-1])
+
+    for p in arguments:
+        if p.__contains__("="):
+            k, v = p.split("=")
+            data[k.lower()] = v
+        else:
+            print(f"Invalid argument '{p}', ignoring.")
+
+    return data
 
 
 
 def show_usage(script_name):
-    print(f"\nUsage:\n{script_name}\n")
-    print(f"*  add_garage")
-    print(f"  name=<Garage name> location=<Location> contact=<Contact person> phone=<Phone number>")
+    print(f"\nUsage:\n")
+    print(f"*  {script_name} add_garage name=<Garage name> location=<Location> contact=<Contact person> phone=<Phone number>")
+    print(f"*  {script_name} del_garage name=<Garage name>")
     sys.exit(len(sys.argv))
 
 
 
-def garage_add(parameters):
+def action_garage_add():
 
-    data_file = "/opt/git_ws/YG/repos/car_maint/main/Data/1.json"
+    garages_file = app_config['garages_file']
 
-    garages_list = []
-
-    # Read existing garages, if any.
-    if os.path.exists(data_file):
-        with open(data_file) as d:
-            garages_list = json.load(d)
-
+    if os.path.exists(garages_file):
+        with open(garages_file) as ac:
+            garages_list = json.load(ac)
+    else:
+        garages_list = []
 
 
-    # Parse the new garage details.
-    data = {}
-    for p in parameters:
-        if p.__contains__("="):
-            k, v = p.split("=")
-            data[k] = v
-        else:
-            print(f"Invalid argument '{p}', ignoring.")
+    # for garage in garages_list:
+    new = {
+        "name": parsed_arguments['name'],
+        "phone": parsed_arguments['phone'],
+        "contact": parsed_arguments['contact'],
+        "location": parsed_arguments['location']
+    }
 
+    garages_list.append(json.dumps(new))
 
-    # Verify that the garage does not exist yet.
-    for garage in garages_list:
-        if data['name'] == garage['name']:
-            create_user_message({"status": "failed", "message": f"The garage '{data['name']}' already exist in the list."})
-            return
-
-    garages_list.append(data)
-
-    with open(data_file, "w+") as j:
+    with open(garages_file, "w") as j:
         json.dump(garages_list, j, indent = 2)
 
-    create_user_message({"status": "success", "message": ""})
+    create_user_message(status="success", message="")
 
 
 
-def create_user_message(message_data):
-    messages_file = os.sep.join([
+def init_app():
+    app_config['messages_file'] = os.sep.join([
+        "..",
         app_config['directories']['user_messages'],
-        app_config['files']['user_messages'],
+        app_config['files']['user_messages']
     ])
-    with open(messages_file, "w") as mf:
-        mf.write(str(message_data))
+    app_config['garages_file'] = os.sep.join([
+        "..",
+        app_config['directories']['data_folder'],
+        app_config['files']['db_garages']
+    ])
 
+
+
+def create_user_message(status, message):
+    with open(app_config['messages_file'], "w") as mf:
+        user_message = "{\"status\": \"" + status + "\", \"message\": \"" + message + "\"}"
+        mf.write(user_message)
 
 
 if __name__ == '__main__':
+
     with open("../common/app_config.json") as c:
         app_config = json.load(c)
 
-    parse_arguments(sys.argv)
+    # Add variables to the application config.
+    init_app()
+
+    # Parse the script's arguments.
+    parsed_arguments = parse_arguments(sys.argv[1:])
+
+    # Run needed action
+    if parsed_arguments['action'] == "test":
+        create_user_message(status="success", message="Way to go !")
+    elif parsed_arguments['action'] == "add_garage":
+        action_garage_add()
+    else:
+        print("No action provided.")
+        show_usage(sys.argv[0])

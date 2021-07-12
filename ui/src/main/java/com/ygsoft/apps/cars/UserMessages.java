@@ -17,44 +17,35 @@ public class UserMessages {
 
 
 
-    public static void main(String[] args) {
-        UserMessages userMessages = new UserMessages();
-        userMessages.convertBeMessage();
-    }
-
-
-
     public UserMessages(){}
 
 
 
-    public void convertBeMessage() {
+    public void convertBeMessage() throws CMIException {
 
-        String status  = "";
-        String message = "";
+        String status  = "Unknown";
+        String message = "INTERNAL: Cannot read the message file.";
 
 
-        Gson gson = new Gson();
+        Path path = Paths.get(appData.getUserMessagesFileFullPath());
+        File f = path.toFile();
 
-        try {
+        if (f.exists()) {
 
-            // create a reader
-            Path path = Paths.get(appData.getUserMessagesFileFullPath());
-            File f = path.toFile();
-            Reader reader = Files.newBufferedReader(path);
+            Gson gson = new Gson();
 
-            JsonObject jo = gson.fromJson(reader, JsonObject.class);
-            status  = jo.get("status").getAsString();
-            message = jo.get("message").getAsString();
+            try {
 
-            // Delete the file.
-            if (! f.delete()) {
-                throw new CmInternalException("Cannot delete the message file");
+                // create a reader
+                Reader reader = Files.newBufferedReader(path);
+
+                JsonObject jo = gson.fromJson(reader, JsonObject.class);
+                status = jo.get("status").getAsString();
+                message = jo.get("message").getAsString();
             }
-
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
 
 
@@ -64,5 +55,11 @@ public class UserMessages {
         ;
 
         Messages.showMessage(messageType, message);
+
+
+        // Delete the file.
+        if (! f.delete()) {
+            throw new CMIException("Cannot delete the message file");
+        }
     }
 }

@@ -1,10 +1,11 @@
 {
-    "files":
-    {
-        "user_messages": "user_messages.json"
+    "files": {
+        "user_messages": "user_messages.json",
+        "db_garages": "garages.json"
     },
-    "directories":
-    {
-        "user_messages": ".UserMessages"
+    "directories": {
+        "data_folder": "Data",
+        "user_messages": ".UserMessages",
+        "initial_folders": ".UserMessages,Data,Reports"
     }
 }

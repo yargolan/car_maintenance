@@ -1,8 +1,8 @@
 package com.ygsoft.apps.cars;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Reader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -39,15 +39,25 @@ public class AppData {
 
 
     private void addDataFromConfigFile(String appConfigFile) {
-
         try {
 
             Reader reader = Files.newBufferedReader(Paths.get(appConfigFile));
 
             JsonObject joAll = gson.fromJson(reader, JsonObject.class);
 
+            data.put("data_dir",                joAll.get("directories").getAsJsonObject().get("data_folder").getAsString());
             data.put("user_messages_dir",       joAll.get("directories").getAsJsonObject().get("user_messages").getAsString());
+            data.put("initial_folders",         joAll.get("directories").getAsJsonObject().get("initial_folders").getAsString());
+
+            data.put("db_garages_file",         joAll.get("files").getAsJsonObject().get("db_garages").getAsString());
             data.put("user_messages_file_name", joAll.get("files").getAsJsonObject().get("user_messages").getAsString());
+
+
+            data.put("db_garages",
+                    data.getOrDefault("data_dir", "")
+                    + File.separatorChar
+                    + data.getOrDefault("db_garages_file", "")
+            );
         }
         catch (IOException e) {
             data.put("user_messages_file", "N/A");
@@ -62,5 +72,16 @@ public class AppData {
             + "/"
             + data.getOrDefault("user_messages_file_name", "")
         ;
+    }
+
+
+
+    public File getGaragesDatabaseFile() {
+        return new File(data.getOrDefault("db_garages", ""));
+    }
+
+
+    public String getInitialFolder() {
+        return data.getOrDefault("initial_folders", "");
     }
 }
