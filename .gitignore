@@ -13,3 +13,11 @@ buildNumber.properties
 # App scpecific
 Data
 Config
+.UserMessages
+
+**/.idea/**
+**/*.iml
+
+# OSX
+**/.DS_Store
+
