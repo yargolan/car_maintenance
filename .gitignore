@@ -21,3 +21,6 @@ Config
 # OSX
 **/.DS_Store
 
+# Maven
+**/target/**
+

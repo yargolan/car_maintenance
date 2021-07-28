@@ -3,10 +3,9 @@ package com.ygsoft.apps.maintenance.ui;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
-import com.ygsoft.apps.Messages;
-import com.ygsoft.apps.ui.UiWrapper;
 import com.ygsoft.apps.maintenance.hc.*;
-
+import com.ygsoft.common.*;
+import com.ygsoft.common.ui.UiWrapper;
 
 
 public class CarMaintenanceUi {
@@ -80,8 +79,8 @@ public class CarMaintenanceUi {
 
         miGaragesAdd.addActionListener(e->{
             System.out.println(e.getActionCommand());
-//            GarageUi garageUi = new GarageUi();
-//            garageUi.addNew();
+            GarageUi garageUi = new GarageUi();
+            garageUi.addNew();
         });
 
         miGaragesDel.addActionListener(e->System.out.println(e.getActionCommand()));

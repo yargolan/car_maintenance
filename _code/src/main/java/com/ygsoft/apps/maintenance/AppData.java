@@ -3,7 +3,6 @@ package com.ygsoft.apps.maintenance;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import com.google.gson.Gson;
 
 
 
@@ -11,18 +10,21 @@ public class AppData {
 
     private static AppData single_instance = null;
 
-    private final Gson gson = new Gson();
     private final HashMap<String, String> data = new HashMap<>();
 
 
     private AppData() {
 
-        String initial_data_file = "";
+        String initial_data_file;
+
+        String rootFolder = "";
 
         try {
+            rootFolder = new File("..").getCanonicalFile().getAbsolutePath();
+
             initial_data_file = String.format(
                     "%s%s%s%s",
-                    new File("..").getCanonicalFile().getAbsolutePath(),
+                    rootFolder,
                     File.separatorChar,
                     "_config",
                     "initial_data.json"
@@ -32,8 +34,39 @@ public class AppData {
             initial_data_file = null;
         }
 
+        File dirDatabases = new File(String.format("%s%s%s",
+                rootFolder,
+                File.separatorChar,
+                "_data"
+        ));
 
+
+
+        File fAppConfig = new File(String.format("%s%s%s%s%s",
+                rootFolder,
+                File.separatorChar,
+                "_config",
+                File.separatorChar,
+                "app_config.json"
+        ));
+
+
+
+        File dbGaragesFile = new File(String.format("%s%s%s",
+                dirDatabases,
+                File.separatorChar,
+                "db_garages.json"
+        ));
+
+
+
+        data.put("db_garages",        dbGaragesFile.getAbsolutePath());
+        data.put("root_folder",       rootFolder);
+        data.put("app_config_file",   fAppConfig.getAbsolutePath());
         data.put("initial_data_file", initial_data_file);
+
+        // Folders
+        data.put("databases_folder", dirDatabases.getAbsolutePath());
     }
 
 
@@ -55,61 +88,21 @@ public class AppData {
     }
 
 
+    public File getAppConfigFile() {
+        return new File(data.get("app_config_file"));
+    }
 
 
+    public File[] getInitialFolders() {
+
+        return new File[]{
+                new File(data.get("root_folder") + File.separatorChar + "_data"),
+                new File(data.get("root_folder") + File.separatorChar + "_config")
+        };
+    }
 
 
-
-
-
-
-
-//    private void addDataFromConfigFile(String appConfigFile) {
-//        try {
-//
-//            Reader reader = Files.newBufferedReader(Paths.get(appConfigFile));
-//
-//            JsonObject joAll = gson.fromJson(reader, JsonObject.class);
-//
-//            data.put("data_dir",                joAll.get("directories").getAsJsonObject().get("data_folder").getAsString());
-//            data.put("user_messages_dir",       joAll.get("directories").getAsJsonObject().get("user_messages").getAsString());
-//            data.put("initial_folders",         joAll.get("directories").getAsJsonObject().get("initial_folders").getAsString());
-//
-//            data.put("db_garages_file",         joAll.get("files").getAsJsonObject().get("db_garages").getAsString());
-//            data.put("user_messages_file_name", joAll.get("files").getAsJsonObject().get("user_messages").getAsString());
-//
-//
-//            data.put("db_garages",
-//                    data.getOrDefault("data_dir", "")
-//                    + File.separatorChar
-//                    + data.getOrDefault("db_garages_file", "")
-//            );
-//        }
-//        catch (IOException e) {
-//            data.put("user_messages_file", "N/A");
-//        }
-//    }
-//
-//
-//
-//    public String getUserMessagesFileFullPath() {
-//        return
-//            data.getOrDefault("user_messages_dir", "")
-//            + "/"
-//            + data.getOrDefault("user_messages_file_name", "")
-//        ;
-//    }
-//
-//
-//
-//    public File getGaragesDatabaseFile() {
-//        return new File(data.getOrDefault("db_garages", ""));
-//    }
-//
-//
-//    public String getInitialFolder() {
-//        return data.getOrDefault("initial_folders", "");
-//    }
-//
-
+    public File getDbGarages() {
+        return new File(data.get("db_garages"));
+    }
 }

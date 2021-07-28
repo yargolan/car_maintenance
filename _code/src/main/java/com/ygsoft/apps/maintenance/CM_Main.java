@@ -2,6 +2,9 @@ package com.ygsoft.apps.maintenance;
 
 import javax.swing.*;
 import com.ygsoft.apps.maintenance.ui.CarMaintenanceUi;
+import com.ygsoft.common.Messages;
+
+import java.io.File;
 
 
 public class CM_Main {
@@ -12,7 +15,22 @@ public class CM_Main {
 
     public static void main(String[] args) {
         CM_Main cm_main = new CM_Main();
+        cm_main.initFolders();
         cm_main.goForIt();
+    }
+
+
+
+    private void initFolders() {
+        AppData appData = AppData.getInstance();
+        File[] foldersList = appData.getInitialFolders();
+        for (File f : foldersList) {
+            if (! f.exists()) {
+                if (!f.mkdirs()) {
+                    Messages.exitWithError("Cannot create the folder '" + f.getName() + "'.", true);
+                }
+            }
+        }
     }
 
 
@@ -27,7 +45,7 @@ public class CM_Main {
             ui.setAndShowUi();
         }
         catch (Throwable t) {
-            System.err.println(t.getMessage());
+            Messages.exitWithError(t.getMessage(), true);
         }
     }
 }
