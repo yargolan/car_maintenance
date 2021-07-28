@@ -1,27 +1,31 @@
 package com.ygsoft.apps.maintenance;
 
+import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
-import com.ygsoft.apps.maintenance.hc.HcUserMessages;
 import com.ygsoft.common.Messages;
+import com.ygsoft.apps.maintenance.hc.HcUserMessages;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 
 public class GarageWrapper {
 
-    private final Garage g;
+    private Garage g;
     private final AppData appData = AppData.getInstance();
 
 
     public GarageWrapper(Garage garage) {
         this.g = garage;
     }
+
+
+
+    public GarageWrapper() {}
+
 
 
     public void add() throws GarageAlreadyExistsException {
@@ -69,5 +73,34 @@ public class GarageWrapper {
         catch (IOException e) {
             Messages.showMessage(Messages.MESSAGE_ERR, "Cannot write to the garages file.");
         }
+    }
+
+
+
+    public List<Garage> getGarages() {
+
+        Gson gson = new Gson();
+
+        File dbGarages = appData.getDbGarages();
+
+        List<Garage> allGarages = new ArrayList<>();
+
+        if (dbGarages.exists()) {
+
+            JsonReader reader = null;
+
+            try {
+                reader = new JsonReader(new FileReader(dbGarages));
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            assert reader != null;
+            Garage[] current = gson.fromJson(reader, Garage[].class);
+            Collections.addAll(allGarages, current);
+        }
+
+        return allGarages;
     }
 }
