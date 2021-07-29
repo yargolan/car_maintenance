@@ -95,6 +95,12 @@ public class GarageUi {
         JTextField tfGarageContact  = new JTextField();
         JTextField tfGarageLocation = new JTextField();
 
+        tfGarageName.setHorizontalAlignment    (JLabel.RIGHT);
+        tfGaragePhone.setHorizontalAlignment   (JLabel.RIGHT);
+        tfGarageContact.setHorizontalAlignment (JLabel.RIGHT);
+        tfGarageLocation.setHorizontalAlignment(JLabel.RIGHT);
+
+
         JButton bApprove = new JButton(HcButtons.B_APPROVE.getText());
 
         // Locations

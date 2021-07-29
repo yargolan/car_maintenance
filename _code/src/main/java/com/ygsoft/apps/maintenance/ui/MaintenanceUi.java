@@ -103,6 +103,8 @@ public class MaintenanceUi {
         tfMaintDetails.setFocusable(true);
         ((JLabel) ddMaintType.getRenderer()).setHorizontalAlignment(JLabel.RIGHT);
         ((JLabel) ddGarageName.getRenderer()).setHorizontalAlignment(JLabel.RIGHT);
+        tfSpeedometer.setHorizontalAlignment(JLabel.RIGHT);
+        tfMaintDetails.setHorizontalAlignment(JLabel.RIGHT);
 
         Container container = fMaintNew.getContentPane();
         container.add(lDate);
@@ -239,6 +241,7 @@ public class MaintenanceUi {
                 mw.add();
 
                 // Close the form only if the 'add another' is NOT selected
+                Messages.showMessage(Messages.MESSAGE_INF, HcUserMessages.M_MAINT_ADD_OK.getText());
                 fMaintNew.dispose();
             }
         });
