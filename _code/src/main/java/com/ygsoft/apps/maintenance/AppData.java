@@ -46,40 +46,29 @@ public class AppData {
 
     private void load_app_config() {
 
+        // General
+        data.put("text_delimiter", ":::");
     }
 
 
 
     private void set_application_data() {
 
-
-
-        String initial_data_file;
-
         String rootFolder = "";
 
         try {
             rootFolder = new File("..").getCanonicalFile().getAbsolutePath();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            initial_data_file = String.format(
-                    "%s%s%s%s%s",
-                    rootFolder,
-                    File.separatorChar,
-                    "_config",
-                    File.separatorChar,
-                    "initial_data.json"
-            );
-        }
-        catch (IOException ioe) {
-            initial_data_file = null;
-        }
 
         File dirDatabases = new File(String.format("%s%s%s",
                 rootFolder,
                 File.separatorChar,
                 "_data"
         ));
-
 
 
         File fAppConfig = new File(String.format("%s%s%s%s%s",
@@ -89,7 +78,6 @@ public class AppData {
                 File.separatorChar,
                 "app_config.json"
         ));
-
 
 
         File dbGaragesFile = new File(String.format("%s%s%s",
@@ -107,20 +95,27 @@ public class AppData {
         ));
 
 
-        // General
-        data.put("text_delimiter", ":::");
 
-
-        // Databases
-        data.put("db_garages",     dbGaragesFile.getAbsolutePath());
-        data.put("db_maintenance", dbMaintFile.getAbsolutePath());
+        File initial_data_file = new File(String.format(
+                "%s%s%s%s%s",
+                rootFolder,
+                File.separatorChar,
+                "_config",
+                File.separatorChar,
+                "initial_data.json"
+        ));
 
 
         // Folders and files.
         data.put("root_folder",       rootFolder);
         data.put("app_config_file",   fAppConfig.getAbsolutePath());
         data.put("databases_folder",  dirDatabases.getAbsolutePath());
-        data.put("initial_data_file", initial_data_file);
+        data.put("initial_data_file", initial_data_file.getAbsolutePath());
+
+
+        // Databases
+        data.put("db_garages",     dbGaragesFile.getAbsolutePath());
+        data.put("db_maintenance", dbMaintFile.getAbsolutePath());
     }
 
 
