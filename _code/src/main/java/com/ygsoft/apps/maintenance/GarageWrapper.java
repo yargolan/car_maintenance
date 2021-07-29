@@ -16,6 +16,8 @@ public class GarageWrapper {
 
     private Garage g;
     private final AppData appData = AppData.getInstance();
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private final File dbGarages = appData.getDbGarages();
 
 
     public GarageWrapper(Garage garage) {
@@ -28,11 +30,12 @@ public class GarageWrapper {
 
 
 
+    public void setGarage(Garage garage) {
+        this.g = garage;
+    }
+
+
     public void add() throws GarageAlreadyExistsException {
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        File dbGarages = appData.getDbGarages();
 
         List<Garage> allGarages = new ArrayList<>();
 
@@ -102,5 +105,22 @@ public class GarageWrapper {
         }
 
         return allGarages;
+    }
+
+
+
+    public void remove() throws GarageCannotBeDeletedException {
+
+        List<Garage> allGarages = getGarages();
+
+        allGarages.removeIf(gg -> gg.getName().equals(this.g.getName()));
+
+        // Re-write the file.
+        try (FileWriter writer = new FileWriter(dbGarages)) {
+            gson.toJson(allGarages, writer);
+        }
+        catch (IOException e) {
+            Messages.showMessage(Messages.MESSAGE_ERR, "Cannot write to the garages file.");
+        }
     }
 }

@@ -82,6 +82,10 @@ public class CarMaintenanceUi {
             garageUi.addNew();
         });
 
-        miGaragesDel.addActionListener(e->System.out.println(e.getActionCommand()));
+        miGaragesDel.addActionListener(e-> {
+            System.out.println(e.getActionCommand());
+            GarageUi garageUi = new GarageUi();
+            garageUi.remove();
+        });
     }
 }

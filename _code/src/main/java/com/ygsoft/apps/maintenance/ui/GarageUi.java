@@ -1,21 +1,19 @@
 package com.ygsoft.apps.maintenance.ui;
 
 import java.awt.*;
+import java.util.List;
 import javax.swing.*;
-
-import com.ygsoft.apps.maintenance.Garage;
-import com.ygsoft.apps.maintenance.GarageAlreadyExistsException;
-import com.ygsoft.apps.maintenance.GarageWrapper;
 import com.ygsoft.common.*;
 import com.ygsoft.common.ui.*;
+import com.ygsoft.apps.maintenance.*;
 import com.ygsoft.apps.maintenance.hc.*;
-import com.ygsoft.apps.maintenance.AppData;
 
 
 
 public class GarageUi {
 
-    private final AppData appData = AppData.getInstance();
+    private final UiWrapper uiWrapper = new UiWrapper();
+
 
 
     public GarageUi(){}
@@ -23,12 +21,11 @@ public class GarageUi {
 
     public static void main(String[] args) {
         GarageUi ui = new GarageUi();
-        ui.addNew();
+        ui.remove();
     }
 
 
     public void addNew() {
-        UiWrapper uiWrapper = new UiWrapper();
         JFrame fNewGarage = uiWrapper.generateFrame(
                 UiWrapper.FRAME_SIZE_S,
                 WindowConstants.DISPOSE_ON_CLOSE,
@@ -126,5 +123,67 @@ public class GarageUi {
 
 
         fNewGarage.setVisible(true);
+    }
+
+
+    public void remove() {
+
+        GarageWrapper garageWrapper = new GarageWrapper();
+        List<Garage> list =  garageWrapper.getGarages();
+
+
+        JFrame fDelGarage = uiWrapper.generateFrame(
+                UiWrapper.FRAME_SIZE_S,
+                WindowConstants.DISPOSE_ON_CLOSE,
+                HcFramesTitles.T_FRAME_DEL_GARAGE.getText()
+        );
+
+
+        JLabel lGarageName = new JLabel(HcLabelsGarage.L_GARAGE_NAME.getText());
+        JComboBox<String> ddGarageNames = new JComboBox<>();
+        JButton bRemove = new JButton(HcGeneral.B_DELETE.getText());
+
+        lGarageName.setBounds  (220,20, 100, 20);
+        ddGarageNames.setBounds(60, 20, 150, 25);
+        bRemove.setBounds      (100,170,90,  40);
+
+        for (Garage g : list) {
+            ddGarageNames.addItem(g.getName());
+        }
+
+        Container container = fDelGarage.getContentPane();
+        container.add(bRemove);
+        container.add(lGarageName);
+        container.add(ddGarageNames);
+
+        bRemove.addActionListener(e->{
+            String readGarageName = (String)ddGarageNames.getSelectedItem();
+            if (readGarageName == null || readGarageName.isEmpty()) {
+                return;
+            }
+
+            try {
+                Garage g = new Garage(readGarageName, "", "", "");
+                garageWrapper.setGarage(g);
+                garageWrapper.remove();
+            }
+            catch (GarageCannotBeDeletedException e1) {
+                Messages.showMessage(
+                        Messages.MESSAGE_ERR,
+                        readGarageName
+                                + HcUserMessages.M_GARAGE_DELETED_FAIL
+                );
+            }
+
+            Messages.showMessage(Messages.MESSAGE_INF,
+                    readGarageName
+                    + "\n"
+                    + HcUserMessages.M_GARAGE_DELETED_OK.getText()
+            );
+
+            fDelGarage.dispose();
+        });
+
+        fDelGarage.setVisible(true);
     }
 }

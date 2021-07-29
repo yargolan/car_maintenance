@@ -1,6 +1,7 @@
 package com.ygsoft.apps.maintenance.hc;
 
 public enum HcGeneral {
+    B_DELETE ("מחק"),
     B_APPROVE("אישור"),
     ;
 
