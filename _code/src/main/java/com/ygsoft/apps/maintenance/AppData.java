@@ -17,11 +17,42 @@ import java.util.List;
 public class AppData {
 
     private static AppData single_instance = null;
-
     private final HashMap<String, String> data = new HashMap<>();
 
 
+
+    public static AppData getInstance() {
+        if (single_instance == null) {
+            single_instance = new AppData();
+        }
+
+        return single_instance;
+    }
+
+
+
+
     private AppData() {
+
+        // Load data from the app config file.
+        load_app_config();
+
+
+        // Set data for the application.
+        set_application_data();
+    }
+
+
+
+    private void load_app_config() {
+
+    }
+
+
+
+    private void set_application_data() {
+
+
 
         String initial_data_file;
 
@@ -90,16 +121,6 @@ public class AppData {
         data.put("app_config_file",   fAppConfig.getAbsolutePath());
         data.put("databases_folder",  dirDatabases.getAbsolutePath());
         data.put("initial_data_file", initial_data_file);
-    }
-
-
-
-    public static AppData getInstance() {
-        if (single_instance == null) {
-            single_instance = new AppData();
-        }
-
-        return single_instance;
     }
 
 
