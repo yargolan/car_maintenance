@@ -13,6 +13,8 @@ import com.ygsoft.apps.maintenance.hc.*;
 public class GarageUi {
 
     private final UiWrapper uiWrapper = new UiWrapper();
+    JComboBox<String> ddGarageNames = new JComboBox<>();
+
 
 
 
@@ -21,11 +23,62 @@ public class GarageUi {
 
     public static void main(String[] args) {
         GarageUi ui = new GarageUi();
-        ui.remove();
+        ui.edit();
     }
 
 
-    public void addNew() {
+
+    public void edit() {
+
+        GarageWrapper garageWrapper = new GarageWrapper();
+        List<Garage> list =  garageWrapper.getGarages();
+        ((JLabel)ddGarageNames.getRenderer()).setHorizontalAlignment(JLabel.RIGHT);
+
+
+        JFrame fEditGarage = uiWrapper.generateFrame(
+                UiWrapper.FRAME_SIZE_S,
+                WindowConstants.DISPOSE_ON_CLOSE,
+                HcFramesTitles.T_FRAME_EDIT_GARAGE.getText()
+        );
+
+
+        JLabel lGarageName = new JLabel(HcLabelsGarage.L_GARAGE_NAME.getText());
+        JButton bEdit = new JButton(HcButtons.B_EDIT.getText());
+
+        bEdit.setBounds        (100,170,90,  40);
+        lGarageName.setBounds  (220,20, 100, 20);
+        ddGarageNames.setBounds(60, 20, 150, 25);
+
+
+        for (Garage g : list) {
+            ddGarageNames.addItem(g.getName());
+        }
+
+        Container container = fEditGarage.getContentPane();
+        container.add(bEdit);
+        container.add(lGarageName);
+        container.add(ddGarageNames);
+
+        bEdit.addActionListener(e->{
+
+            String readGarageName = (String)ddGarageNames.getSelectedItem();
+            if (readGarageName == null || readGarageName.isEmpty()) {
+                return;
+            }
+
+            Garage garage = garageWrapper.getByName(readGarageName);
+
+            addNew(garage);
+
+            fEditGarage.dispose();
+        });
+
+        fEditGarage.setVisible(true);
+    }
+
+
+
+    public void addNew(final Garage garage) {
         JFrame fNewGarage = uiWrapper.generateFrame(
                 UiWrapper.FRAME_SIZE_S,
                 WindowConstants.DISPOSE_ON_CLOSE,
@@ -42,7 +95,7 @@ public class GarageUi {
         JTextField tfGarageContact  = new JTextField();
         JTextField tfGarageLocation = new JTextField();
 
-        JButton bApprove = new JButton(HcGeneral.B_APPROVE.getText());
+        JButton bApprove = new JButton(HcButtons.B_APPROVE.getText());
 
         // Locations
         lGarageName.setBounds    (220, 20, 100, 20);
@@ -70,6 +123,19 @@ public class GarageUi {
         container.add(tfGarageLocation);
 
         container.add(bApprove);
+
+        // Set initial values.
+        if (garage != null) {
+            tfGarageName.setText    (garage.getName());
+            tfGaragePhone.setText   (garage.getPhone());
+            tfGarageContact.setText (garage.getContact());
+            tfGarageLocation.setText(garage.getLocation());
+            tfGarageName.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+            tfGaragePhone.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+            tfGarageContact.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+            tfGarageLocation.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        }
+
 
         bApprove.addActionListener(e->{
 
@@ -101,23 +167,24 @@ public class GarageUi {
                 return;
             }
 
-            Garage garage = new Garage(readGarageName, readGarageLocation, readGaragePhone, readGarageContact);
-            GarageWrapper gw = new GarageWrapper(garage);
+            GarageWrapper gw = new GarageWrapper();
+
+            Garage newGarage = new Garage(readGarageName, readGarageLocation, readGaragePhone, readGarageContact);
+            gw.setGarage(newGarage);
+
+
             try {
-                gw.add();
+                gw.add(true);
             }
             catch (GarageAlreadyExistsException ge) {
-                System.out.println("ge = " + this.getClass().getName());
-                if (ge.getClass().getName().equals(this.getClass().getName() + ".GarageAlreadyExistsException")) {
-                    Messages.showMessage(Messages.MESSAGE_INF, ge.getMessage());
-                    return;
-                }
-                else {
-                    Messages.exitWithError("BOO");
-                }
+                Messages.showMessage(Messages.MESSAGE_INF, ge.getMessage());
+                return;
             }
 
-            Messages.showMessage(Messages.MESSAGE_INF, HcUserMessages.M_GARAGE_ADD_OK.getText());
+            Messages.showMessage(Messages.MESSAGE_INF,
+                    readGarageName
+                    + "\n"
+                    + HcUserMessages.M_GARAGE_ADD_OK.getText());
             fNewGarage.dispose();
         });
 
@@ -126,10 +193,12 @@ public class GarageUi {
     }
 
 
+
     public void remove() {
 
         GarageWrapper garageWrapper = new GarageWrapper();
         List<Garage> list =  garageWrapper.getGarages();
+        ((JLabel)ddGarageNames.getRenderer()).setHorizontalAlignment(JLabel.RIGHT);
 
 
         JFrame fDelGarage = uiWrapper.generateFrame(
@@ -140,8 +209,7 @@ public class GarageUi {
 
 
         JLabel lGarageName = new JLabel(HcLabelsGarage.L_GARAGE_NAME.getText());
-        JComboBox<String> ddGarageNames = new JComboBox<>();
-        JButton bRemove = new JButton(HcGeneral.B_DELETE.getText());
+        JButton bRemove = new JButton(HcButtons.B_DELETE.getText());
 
         lGarageName.setBounds  (220,20, 100, 20);
         ddGarageNames.setBounds(60, 20, 150, 25);

@@ -73,7 +73,7 @@ public class MaintenanceUi {
         cbAddAnother = new JCheckBox();
 
         bToday = new JButton(HcLabelsMaintNew.B_TODAY.getText());
-        bApprove = new JButton(HcGeneral.B_APPROVE.getText());
+        bApprove = new JButton(HcButtons.B_APPROVE.getText());
 
         lDate.setBounds              (360, 20, 150,20);
         lGarageName.setBounds        (420, 60, 150,20);

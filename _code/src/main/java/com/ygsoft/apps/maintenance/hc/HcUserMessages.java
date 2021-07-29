@@ -7,6 +7,7 @@ public enum HcUserMessages {
     M_GARAGE_ADD_OK       ("המוסך נוסף לרשימה בהצלחה"),
     M_GARAGE_ALREADY_EXIST("המוסך כבר קיים ברשימה"),
 
+    M_GARAGE_EDITED_OK   ("פרטי המוסך עודכנו בהצלחה"),
     M_GARAGE_DELETED_OK  ("שם המוסך נמחק בהצלחה"),
     M_GARAGE_DELETED_FAIL("שם המוסך לא הצליח להמחק"),
     ;

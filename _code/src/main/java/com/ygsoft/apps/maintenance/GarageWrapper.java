@@ -30,12 +30,30 @@ public class GarageWrapper {
 
 
 
+    public Garage getByName(String name) {
+
+        Garage g = null;
+
+        List<Garage> list = getGarages();
+
+        for (Garage gg : list) {
+            if (gg.getName().equals(name)) {
+                g = gg;
+            }
+        }
+
+        return g;
+    }
+
+
+
     public void setGarage(Garage garage) {
         this.g = garage;
     }
 
 
-    public void add() throws GarageAlreadyExistsException {
+
+    public void add(boolean allowOverride) throws GarageAlreadyExistsException {
 
         List<Garage> allGarages = new ArrayList<>();
 
@@ -57,14 +75,20 @@ public class GarageWrapper {
 
 
         // Add the new Garage, if it doesn't exist yet.
-        for (Garage garage : allGarages) {
-            if (garage.getName().equals(g.getName())) {
-                throw new GarageAlreadyExistsException(
-                        g.getName()
-                        + "\n"
-                        + HcUserMessages.M_GARAGE_ALREADY_EXIST.getText());
+        if (allowOverride) {
+            allGarages.removeIf(gg -> gg.getName().equals(this.g.getName()));
+        }
+        else {
+            for (Garage garage : allGarages) {
+                if (garage.getName().equals(g.getName())) {
+                    throw new GarageAlreadyExistsException(
+                            g.getName()
+                                    + "\n"
+                                    + HcUserMessages.M_GARAGE_ALREADY_EXIST.getText());
+                }
             }
         }
+
 
         allGarages.add(g);
 

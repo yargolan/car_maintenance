@@ -1,6 +1,7 @@
 package com.ygsoft.apps.maintenance.hc;
 
-public enum HcGeneral {
+public enum HcButtons {
+    B_EDIT   ("ערוך"),
     B_DELETE ("מחק"),
     B_APPROVE("אישור"),
     ;
@@ -14,7 +15,7 @@ public enum HcGeneral {
 
 
 
-    HcGeneral(String text) {
+    HcButtons(String text) {
         this.theText = text;
     }
 }
