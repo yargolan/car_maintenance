@@ -1,5 +1,9 @@
 package com.ygsoft.apps.maintenance;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Maintenance {
 
     private String maintDetails;
@@ -51,12 +55,27 @@ public class Maintenance {
 
 
     public void toScreen() {
+
+        List<String> list = new ArrayList<>();
+
+        String details = getMaintDetails();
+
+        if (details.contains(appData.getTextDelimiter())) {
+            list.addAll(Arrays.asList(details.split(appData.getTextDelimiter())));
+        }
+        else {
+            list.add(details);
+        }
+
         System.out.println("+----------------------------------------");
         System.out.println("| Date          : " + getDate());
         System.out.println("| Name          : " + getGarageName());
         System.out.println("| Type          : " + getMaintType());
         System.out.println("| Speedometer   : " + getSpeedometer());
-        System.out.println("| Maint. Details: " + getMaintDetails());
+        System.out.println("| Maint. Details: ");
+        for (String s : list) {
+            System.out.println("+---> " + s);
+        }
         System.out.println("+---------------------------------------");
         System.out.println();
     }

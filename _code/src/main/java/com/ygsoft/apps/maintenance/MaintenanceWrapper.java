@@ -22,6 +22,12 @@ public class MaintenanceWrapper {
 
 
 
+    public MaintenanceWrapper() {
+        m = null;
+    }
+
+
+
     public void add() {
 
         File dbMaint = appData.getDbMaintenance();
@@ -43,14 +49,16 @@ public class MaintenanceWrapper {
         }
 
         // Add the new maintenance, if it doesn't exist yet.
-        for (Maintenance mm : allMaintenances) {
-            if (mm.getSpeedometer().equals(this.m.getSpeedometer())) {
-                if (mm.getGarageName().equals(this.m.getGarageName())) {
-                    return;
+        if (this.m != null) {
+            for (Maintenance mm : allMaintenances) {
+                if (mm.getSpeedometer().equals(this.m.getSpeedometer())) {
+                    if (mm.getGarageName().equals(this.m.getGarageName())) {
+                        return;
+                    }
                 }
             }
+            allMaintenances.add(this.m);
         }
-        allMaintenances.add(this.m);
 
 
         // Dump the data into the file.
@@ -60,6 +68,38 @@ public class MaintenanceWrapper {
         catch (IOException e) {
             Messages.showMessage(Messages.MESSAGE_ERR, "Cannot write to the maintenance file.");
         }
+    }
+
+
+
+    public List<Maintenance> getAllMaintenance() {
+
+        List<Maintenance> list = new ArrayList<>();
+
+        File dbMaintenances = appData.getDbMaintenance();
+
+        if (dbMaintenances.exists()) {
+            Gson gson = new Gson();
+
+            JsonReader reader = null;
+
+            try {
+                reader = new JsonReader(new FileReader(dbMaintenances));
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            assert reader != null;
+            Maintenance[] current = gson.fromJson(reader, Maintenance[].class);
+            Collections.addAll(list, current);
+
+        }
+        else {
+            Messages.showMessage(Messages.MESSAGE_INF, "No data for report creation.");
+        }
+
+        return list;
     }
 }
 

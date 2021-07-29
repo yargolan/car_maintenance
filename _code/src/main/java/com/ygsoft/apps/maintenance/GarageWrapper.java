@@ -147,4 +147,14 @@ public class GarageWrapper {
             Messages.showMessage(Messages.MESSAGE_ERR, "Cannot write to the garages file.");
         }
     }
+
+
+    public List<String> getGarageNames() {
+        List<String> names = new ArrayList<>();
+        List<Garage> list = getGarages();
+        for (Garage g : list) {
+            names.add(g.getName());
+        }
+        return names;
+    }
 }

@@ -3,6 +3,8 @@ package com.ygsoft.apps.maintenance.ui;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
+
+import com.ygsoft.apps.maintenance.ReportsGenerator;
 import com.ygsoft.apps.maintenance.hc.*;
 import com.ygsoft.common.*;
 import com.ygsoft.common.ui.UiWrapper;
@@ -92,6 +94,12 @@ public class CarMaintenanceUi {
             System.out.println(e.getActionCommand());
             GarageUi garageUi = new GarageUi();
             garageUi.edit();
+        });
+
+        miReportPerGarage.addActionListener(e->{
+            System.out.println(e.getActionCommand());
+            ReportsUi reportsUi = new ReportsUi();
+            reportsUi.generate(ReportsGenerator.REPORT_BY_GARAGE_NAME);
         });
     }
 }

@@ -9,6 +9,8 @@ public enum HcUserMessages {
 
     M_GARAGE_DELETED_OK  ("שם המוסך נמחק בהצלחה"),
     M_GARAGE_DELETED_FAIL("שם המוסך לא הצליח להמחק"),
+
+    M_NO_DATA_FOUND("אין מידע לחתך זה"),
     ;
 
     private final String theText;
