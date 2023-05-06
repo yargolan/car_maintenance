@@ -5,10 +5,11 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.ygsoft.apps.Messages;
-
 
 
 public class UserMessages {
@@ -21,10 +22,19 @@ public class UserMessages {
 
 
 
+    private HashMap<Integer, String> generateMessagesData() {
+        HashMap<Integer, String> data = new HashMap<>();
+        data.put(0, "בדיקה בלבד");
+        return data;
+    }
+
+
     public void convertBeMessage() throws CMIException {
 
-        String status  = "Unknown";
-        String message = "INTERNAL: Cannot read the message file.";
+        HashMap<Integer, String> messagesData = generateMessagesData();
+
+        String status          = "Unknown";
+        String message         = "INTERNAL: Cannot read the message file.";
 
 
         Path path = Paths.get(appData.getUserMessagesFileFullPath());
@@ -42,6 +52,14 @@ public class UserMessages {
                 JsonObject jo = gson.fromJson(reader, JsonObject.class);
                 status = jo.get("status").getAsString();
                 message = jo.get("message").getAsString();
+                boolean needConversion = jo.get("need_conversion")
+                        .getAsString()
+                        .equalsIgnoreCase(Boolean.TRUE.toString())
+                ;
+
+                if (needConversion) {
+                    message = messagesData.getOrDefault(Integer.parseInt(message), "xxx");
+                }
             }
             catch (Exception ex) {
                 ex.printStackTrace();
@@ -61,5 +79,10 @@ public class UserMessages {
         if (! f.delete()) {
             throw new CMIException("Cannot delete the message file");
         }
+    }
+
+
+    public static void main(String[] args) throws CMIException {
+        new UserMessages().convertBeMessage();
     }
 }

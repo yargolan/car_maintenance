@@ -38,27 +38,34 @@ def action_garage_add():
 
     garages_file = app_config['garages_file']
 
-    if os.path.exists(garages_file):
-        with open(garages_file) as ac:
-            garages_list = json.load(ac)
-    else:
-        garages_list = []
-
-
-    # for garage in garages_list:
     new = {
-        "name": parsed_arguments['name'],
-        "phone": parsed_arguments['phone'],
-        "contact": parsed_arguments['contact'],
-        "location": parsed_arguments['location']
+        'name': parsed_arguments['name'],
+        'phone': parsed_arguments['phone'],
+        'contact': parsed_arguments['contact'],
+        'location': parsed_arguments['location']
     }
 
-    garages_list.append(json.dumps(new))
+    if not os.path.isfile(garages_file):
+        a = [new]
+        with open(garages_file, mode = 'w') as f:
+            f.write(json.dumps(a, indent = 2))
+    else:
+        with open(garages_file) as f:
+            g_list = json.load(f)
 
-    with open(garages_file, "w") as j:
-        json.dump(garages_list, j, indent = 2)
+        for garage in g_list:
+            if new['name'] == garage['name']:
+                with open(app_config['common_messages_file']) as m:
+                    cmf = json.load(m)
 
-    create_user_message(status="success", message="")
+                create_user_message(status = "failed", message = cmf['10'], need_conversion = True)
+            else:
+                g_list.append(new)
+
+                with open(garages_file, mode = 'w') as f:
+                    f.write(json.dumps(g_list, indent = 2))
+
+                create_user_message(status="success", message="", need_conversion = False)
 
 
 
@@ -68,18 +75,26 @@ def init_app():
         app_config['directories']['user_messages'],
         app_config['files']['user_messages']
     ])
+
     app_config['garages_file'] = os.sep.join([
         "..",
         app_config['directories']['data_folder'],
         app_config['files']['db_garages']
     ])
 
+    app_config['common_messages_file'] = os.sep.join([
+        "..",
+        app_config['directories']['common_folder'],
+        app_config['files']['user_messages']
+    ])
 
 
-def create_user_message(status, message):
+def create_user_message(status, message, need_conversion):
     with open(app_config['messages_file'], "w") as mf:
-        user_message = "{\"status\": \"" + status + "\", \"message\": \"" + message + "\"}"
-        mf.write(user_message)
+        user_message = {'status': status, 'message': message, 'need_conversion': need_conversion}
+        # user_message = "{\"status\": \"" + status + "\", \"message\": \"" + message + "\, \"needToConvert\"" + }"
+        # mf.write(user_message)
+        mf.write(json.dumps(user_message))
 
 
 if __name__ == '__main__':
@@ -95,7 +110,7 @@ if __name__ == '__main__':
 
     # Run needed action
     if parsed_arguments['action'] == "test":
-        create_user_message(status="success", message="Way to go !")
+        create_user_message(status="success", message="Way to go !", need_conversion = False)
     elif parsed_arguments['action'] == "add_garage":
         action_garage_add()
     else:

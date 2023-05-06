@@ -66,7 +66,6 @@ public class CarMaintenanceUi {
 
     private void setActionListeners() {
         miMaintExit.addActionListener(e->{
-            System.out.println(e.getActionCommand());
             if (Messages.areYouSure(HcUserMessages.M_R_U_SURE.getText())) {
                 fMain.dispose();
             }

@@ -45,14 +45,49 @@ public class AppData {
 
             JsonObject joAll = gson.fromJson(reader, JsonObject.class);
 
-            data.put("data_dir",                joAll.get("directories").getAsJsonObject().get("data_folder").getAsString());
-            data.put("user_messages_dir",       joAll.get("directories").getAsJsonObject().get("user_messages").getAsString());
-            data.put("initial_folders",         joAll.get("directories").getAsJsonObject().get("initial_folders").getAsString());
+            data.put("data_dir", joAll
+                    .get("directories")
+                    .getAsJsonObject()
+                    .get("data_folder")
+                    .getAsString()
+            );
+            data.put("common_dir", joAll
+                    .get("directories")
+                    .getAsJsonObject()
+                    .get("common_folder")
+                    .getAsString()
+            );
+            data.put("initial_folders", joAll
+                    .get("directories")
+                    .getAsJsonObject()
+                    .get("initial_folders")
+                    .getAsString()
+            );
+            data.put("user_messages_dir", joAll
+                    .get("directories")
+                    .getAsJsonObject()
+                    .get("user_messages")
+                    .getAsString()
+            );
 
-            data.put("db_garages_file",         joAll.get("files").getAsJsonObject().get("db_garages").getAsString());
-            data.put("user_messages_file_name", joAll.get("files").getAsJsonObject().get("user_messages").getAsString());
-
-
+            data.put("user_messages", joAll
+                    .get("files")
+                    .getAsJsonObject()
+                    .get("common_messages_file")
+                    .getAsString()
+            );
+            data.put("db_garages_file", joAll
+                    .get("files")
+                    .getAsJsonObject()
+                    .get("db_garages")
+                    .getAsString()
+            );
+            data.put("user_messages_file_name", joAll
+                    .get("files")
+                    .getAsJsonObject()
+                    .get("user_messages")
+                    .getAsString()
+            );
             data.put("db_garages",
                     data.getOrDefault("data_dir", "")
                     + File.separatorChar
@@ -79,6 +114,7 @@ public class AppData {
     public File getGaragesDatabaseFile() {
         return new File(data.getOrDefault("db_garages", ""));
     }
+
 
 
     public String getInitialFolder() {

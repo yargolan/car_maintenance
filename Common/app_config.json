@@ -1,0 +1,13 @@
+{
+    "files": {
+        "db_garages": "garages.json",
+        "user_messages": "user_messages.json",
+        "common_messages_file": "user_messages"
+    },
+    "directories": {
+        "data_folder": "Data",
+        "common_folder": "Common",
+        "user_messages": ".UserMessages",
+        "initial_folders": ".UserMessages,Data,Reports"
+    }
+}
